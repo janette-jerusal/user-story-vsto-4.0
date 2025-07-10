@@ -1,7 +1,5 @@
 using System;
-using Microsoft.Office.Tools.Excel;
 using Excel = Microsoft.Office.Interop.Excel;
-using Microsoft.Office.Core;
 
 namespace UserStorySimilarityAddIn
 {
@@ -11,23 +9,19 @@ namespace UserStorySimilarityAddIn
 
         private void ThisAddIn_Startup(object sender, EventArgs e)
         {
-            // Nothing required here
+            // Optional: initialization logic
         }
 
         private void ThisAddIn_Shutdown(object sender, EventArgs e)
         {
-            // Clean-up code here
+            // Optional: cleanup logic
         }
 
-        protected override IRibbonExtensibility CreateRibbonExtensibilityObject()
+        protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
         {
-            return new MyRibbon();
-        }
-
-        private void InternalStartup()
-        {
-            this.Startup += new EventHandler(ThisAddIn_Startup);
-            this.Shutdown += new EventHandler(ThisAddIn_Shutdown);
+            ribbon = new MyRibbon();
+            return ribbon;
         }
     }
 }
+
