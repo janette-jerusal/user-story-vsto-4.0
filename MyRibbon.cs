@@ -1,43 +1,35 @@
-using System.Reflection;
+using System;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using Microsoft.Office.Core;
+using System.Runtime.InteropServices;
 
 namespace UserStorySimilarityAddIn
 {
+    [ComVisible(true)]
     public class MyRibbon : IRibbonExtensibility
     {
         private IRibbonUI ribbon;
 
-        public MyRibbon()
-        {
-            // Confirm constructor runs at startup
-            MessageBox.Show("Ribbon Constructor Called");
-        }
-
         public string GetCustomUI(string ribbonID)
         {
-            MessageBox.Show("GetCustomUI triggered!");
-
-            var assembly = Assembly.GetExecutingAssembly();
-            var resources = assembly.GetManifestResourceNames();
-            MessageBox.Show("Embedded Resources:\n" + string.Join("\n", resources));
-
-            foreach (var res in resources)
+            var res = typeof(MyRibbon).Assembly.GetManifestResourceNames();
+            foreach (var r in res)
             {
-                if (res.EndsWith("MvRibbon.xml", System.StringComparison.OrdinalIgnoreCase))
+                if (r.EndsWith("CustomRibbon.xml"))
                 {
-                    using (Stream stream = assembly.GetManifestResourceStream(res))
+                    using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(r))
                     using (StreamReader reader = new StreamReader(stream))
                     {
                         string xml = reader.ReadToEnd();
-                        MessageBox.Show("Ribbon XML loaded:\n" + xml.Substring(0, Math.Min(xml.Length, 200)));
+                        MessageBox.Show("Ribbon XML loaded:\n" + xml);
                         return xml;
                     }
                 }
             }
 
-            MessageBox.Show("MvRibbon.xml not found!");
+            MessageBox.Show("CustomRibbon.xml not found in resources.");
             return null;
         }
 
